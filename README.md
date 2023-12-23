@@ -52,4 +52,15 @@ Select **Open** near the bottom of the application. You will be greeted with an 
 ### 3.4.0
 Congratulations, you are now connected to your server!
 
-**FURTHER INSTRUCTIONS COMING SOON**
+## 4.0.0 DarkFlame Setup 1
+### 4.1.0 Important notes moving Forewards/Problems solved in this tutorial
+At this point, it is possible to follow the tutorial provided in the Git Repository for the DarkFlameUniverse server. For the most part, this tutorial will guide you through a majority of the installation. But, there are a few problems that I ran into when going through said tutorial using an Azure VM. These problems (solved/attempted to being solved in this tutorial) are as follows.
+#### 4.1.1 Virtual maching compute power isn't enough
+**Solved** through an upgrade of compute powers i.e. using a vm of size > than Standard B1s.
+#### 4.1.2 MySQL symlinks throwing errors during setup
+error: sudo systemctl enable --now mysql Synchronizing state of mysql.service with SysV service script with /lib/systemd/systemd-sysv-install. Executing: /lib/systemd/systemd-sysv-install enable mysql Failed to enable unit: Refusing to operate on alias name or linked unit file: mysql.service.
+**Solved** through the following commands: `sudo rm /etc/system/mysql.service` and `sudo rm /etc/system/mysqld.service`
+#### 4.1.3 Being unable to sign into the game
+This problem seemingly arises from the admin account (which is supposedly setup when running `./masterserver -a`) a. not being added to the MySQL database and subsequently not being recognized in the nexus dashboard. Or b. being put into the MySQL database, but not being "acitvated" on the NexusDashboard application. My solution changes the settings of both of these programs, rather than changing the code running them. Of course, this does make the server a bit more unsafe (i.e anyone can play because they don't need a playkey to register). This shouldn't be a problem though, as these servers are only meant for a few people to play on at a time.
+**Solved** through editing the configuration of the Nexus Dashboard in `/NexusDashboard/app/settings.py`. Setting `USER_ENABLE_REGISTER = True` and  `REQUIRE_PLAY_KEY = False`. This allows individuals to register on the NexusDashboard without using a playkey. In tandem, going into `/DarkflameServer/build/authconfig.ini` and setting `dont_use_keys=1`. This allows the server to accept player accounts that haven't used playkeys to register
+#### 4.1.4 The SQL database setup in the DarkflameServer not having the proper table columns
